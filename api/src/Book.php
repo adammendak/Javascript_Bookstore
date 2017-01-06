@@ -15,14 +15,11 @@ class Book implements JsonSerializable
         $this->description = '';
     }
 
-    //id niepodane zwroci all books a podane zwroci pojedyncza ksiazke 
     public static function loadFromDB(mysqli $conn, $id = null)
     {
         if (is_null($id)) {
-            //pobieramy all books
             $result = $conn->query("SELECT * FROM books");
         } else {
-            //pobieramy pojedyncza ksiazke
             $result = $conn->query("SELECT * FROM books WHERE id= '" . intval($id) . "'");
         }
 
@@ -42,10 +39,27 @@ class Book implements JsonSerializable
         return $booklist;
     }
 
+    static public function loadBookById(mysqli $connection, $id){
+        $query = "SELECT * FROM books WHERE id = ". $connection ->real_escape_string($id);
+        $res = $connection -> query($query);
+        if($res && $res -> num_rows == 1){
+            $row = $res -> fetch_assoc();
+            $book = new Book();
+            $book->id = $row['id'];
+            $book->setTitle($row['title']);
+            $book->setAuthor($row['author']);
+            $book->setDescription($row['description']);
+
+            return $book;
+        }else{
+            return null;
+        }
+
+    }
     public function addBookToDB(mysqli $conn)
     {
-        if ($this->$id != -1) {
-            $query = "INSERT INTO `books` ('id', 'title', 'author', 'description') VALUES('$this->id','$this->title','$this->author','$this->description')";
+        if ($this->id == -1) {
+            $query = "INSERT INTO `books` (title, author, description) VALUES ('$this->title','$this->author','$this->description')";
             if ($conn->query($query)) {
                 $this->id = $conn->insert_id;
                 return TRUE;
@@ -53,15 +67,16 @@ class Book implements JsonSerializable
                 return FALSE;
             }
         }
+
     }
+
 
     public function updateBook(mysqli $conn)
     {
-        if ($this->$id != -1) {
-            $query = "UPDATE books SET title = '$this->title', author='$this->author', description='$this->description' WHERE id= $this->id";
+        if ($this->id != -1) {
+            $query = "UPDATE books SET title='$this->title', author='$this->author', description='$this->description' WHERE id='$this->id'";
             if ($conn->query($query)) {
-
-                $this->id = $conn->insert_id;
+//                $this->id = $conn->insert_id;
                 return TRUE;
             } else {
                 return FALSE;
@@ -71,12 +86,14 @@ class Book implements JsonSerializable
 
     public function deleteBook(mysqli $conn)
     {
-        if($this-> $id != -1){
-            $query = "DELETE From books WHERE id ='" . $this->$id . "'";
-            $conn->query($query);
-            return true;
+        if($this->id != -1){
+            $query = "DELETE From books WHERE id ='" . $this->id . "'";
+            if($conn->query($query)) {
+                return  true;
+            } else {
+                return false;
+            }
         }
-        return false;
     }
 
     public function jsonSerialize()
@@ -94,6 +111,7 @@ class Book implements JsonSerializable
     {
         return $this->id;
     }
+
 
     function getTitle()
     {

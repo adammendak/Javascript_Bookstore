@@ -20,41 +20,63 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case('POST'):
-        if (isset($_POST['title']) && strlen($_POST['title']) > 0 &&
-            isset($_POST['author']) && strlen($_POST['author']) > 0 &&
-            isset($_POST['description']) && strlen($_POST['description']) > 0) {
+        if(!isset($_POST['_method'])) {
+            if (isset($_POST['title']) && strlen($_POST['title']) > 0 &&
+                isset($_POST['author']) && strlen($_POST['author']) > 0 &&
+                isset($_POST['description']) && strlen($_POST['description']) > 0
+            ) {
+                $book = new Book();
+                $book->setAuthor($_POST['author']);
+                $book->setTitle($_POST['title']);
+                $book->setDescription($_POST['description']);
+                $book->addBookToDB($conn);
+                echo json_encode($book);
+            }
+        } elseif($_POST['_method'] == 'DELETE') {
+            $book = Book::loadBookById($conn, $_POST['id']);
+            if ($book->deleteBook($conn)) {
+                $result = "ksiazka skasowana";
+            } else {
+                $result = "nieudana proba kasowania";
+            };
 
-            $book = new Book;
-            $book->setAuthor($_POST['author']);
-            $book->setTitle($_POST['title']);
-            $book->setDescription($_POST['description']);
-            $book->addBookToDB($conn);
-            echo json_encode($book);
+            echo json_encode($result);
         }
         break;
 
     case('PUT'):
         parse_str(file_get_contents('php://input'), $put_vars);
-        if  (isset($put_vars['id']) &&
-            (isset($put_vars['newAuthor']) && strlen($put_vars['newAuthor']) > 0) ||
-            (isset($put_vars['newDescription']) && strlen($put_vars['newDescription']) > 0) ||
-            (isset($put_vars['newTitle']) && strlen($put_vars['newTitle']) > 0)) {
-            $id = $put_vars['id'];
-            $newAuthor = $put_vars['newAuthor'];
-            $newDescription = $put_vars['newDescription'];
-            $newtitle = $put_vars['newTitle'];
 
-            $book->setAuthor($newAuthor);
-            $book->setDescription($newDescription);
-            $book->setTitle($newtitle);
+        if (isset($put_vars['id']) &&
+            (isset($put_vars['updateAuthor']) && strlen($put_vars['updateAuthor']) > 0) ||
+            (isset($put_vars['updateDescription']) && strlen($put_vars['updateDescription']) > 0) ||
+            (isset($put_vars['updateTitle']) && strlen($put_vars['updateTitle']) > 0)
+        ) {
+            $id = $put_vars['id'];
+            $updateAuthor = $put_vars['updateAuthor'];
+            $updateDescription = $put_vars['updateDescription'];
+            $updateTitle = $put_vars['updateTitle'];
+
+
+            $book = Book::loadBookById($conn, $id);
+            $book->setAuthor($updateAuthor);
+            $book->setDescription($updateDescription);
+            $book->setTitle($updateTitle);
             $book->updateBook($conn);
+            echo json_encode($book);
         }
         break;
 
     case('DELETE'):
         parse_str(file_get_contents('php://input'), $put_vars);
-        Book::deleteBook($conn);
-        $result = ['DeleteResult' => 'Ksiazka skasowana'];
+        $id = $put_vars['id'];
+        $book = Book::loadBookById($conn, $id);
+        if ($book->deleteBook($conn)) {
+            $result = "ksiazka skasowana";
+        } else {
+            $result = "nieudana proba kasowania";
+        };
+
         echo json_encode($result);
         break;
 

@@ -11,7 +11,7 @@
         <nav>
         </nav>
         <main>
-            <form method="POST">
+            <form>
                 <label>
                     Tytuł:<br>
                     <input id="titleInput" type="text" placeholder="title" name="title"><br>
