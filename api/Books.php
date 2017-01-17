@@ -30,7 +30,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $book->setTitle($_POST['title']);
                 $book->setDescription($_POST['description']);
                 $book->addBookToDB($conn);
-                echo json_encode($book);
+                json_encode($book);
             }
         } elseif($_POST['_method'] == 'DELETE') {
             $book = Book::loadBookById($conn, $_POST['id']);

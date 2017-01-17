@@ -44,7 +44,6 @@ $(function () {
         AjaxToSend.title = addTitle;
         AjaxToSend.author = addAuthor;
         AjaxToSend.description = addDesc;
-
         $.ajax({
             url: 'api/Books.php',
             type: 'POST',

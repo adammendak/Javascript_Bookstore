@@ -11,7 +11,9 @@
         <nav>
         </nav>
         <main>
+            <section class="bookForm">
             <form>
+                <h3>Dodaj książkę:</h3>
                 <label>
                     Tytuł:<br>
                     <input id="titleInput" type="text" placeholder="title" name="title"><br>
@@ -26,12 +28,15 @@
                 </label>
                 <input id="addBook" type="submit" value="addBook" placeholder="dodaj książkę">
             </form>
+            </section>
+            <section class="showBooks">
             <form method="GET">
                 <input id="showBooks" type="submit" value="Pokaż książki">
             </form>
             <h1>Lista Książek: </h1>
             <div id="bookList">
             </div>
+            </section>
         </main>
         <footer>
         </footer>
