@@ -9,7 +9,7 @@ class DB
             //polacznie istnieje
             return self::$conn;
         } else {
-            self::$conn = new mysqli('xxxxx', 'xxxx', 'xxxxxx', 'xxxxxx');
+            self::$conn = new mysqli('localhost', 'root', 'xxx', 'Bookstore');
             self::$conn->set_charset('utf8');
             if (self::$conn->connect_error) {
                 die('Connection error: ' . self::$conn->connect_errno);

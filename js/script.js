@@ -12,7 +12,7 @@ $(function () {
                     var book = JSON.parse(result[i]);
                     var bookDiv = $('<div>');
                     bookDiv.addClass('singleBook');
-                    bookDiv.html('<h3 data-id="' + book.id + '">' + book.title + '</h3><div class="description"></div>');
+                    bookDiv.html('<h3 data-id="' + book.id + '">' + book.title + '</h3><img src="http://localhost/Bookstore/img/bookIcon.png"><div class="description"></div></div>');
                     $('#bookList').append(bookDiv)
                 }
             },

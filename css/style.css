@@ -32,3 +32,30 @@ text-align: center;
     margin:0 auto;
     text-align: center;
 }
+#showBooks {
+    display: block;
+    width: 90px;
+    height: 30px;
+    margin: 0 auto;
+    margin-top: 10px;
+    font-weight: bold;
+    background-color: #0088CC;
+    border-color:#0088CC;
+    border-radius: 10px;
+}
+#showBooks:hover {
+    background-color: #0077DD;
+    transform: scale(1.1);
+    transition-duration: 0.3s;
+}
+img {
+    width: 150px;
+    height: 150px;
+}
+.singleBook {
+    float:left;
+    width: 300px;
+    height: 400px;
+    border: solid black 4px;
+    border-radius: 15px;
+}
